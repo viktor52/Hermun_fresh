@@ -34,17 +34,13 @@ def create_model():
     
     model.fifo("thrir_laxa_stock", 2 ,inflow = "thrirlaxar_delivery" ,take = "fish_sold_thrir_laxar", expire = "thrir_laxar_throw_away")
     
-    model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire =  )
+    model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire = None )
     
     model.stock("hermans_verslun_throw_away_stock",0,inflow="hermans_verslun_throw_away" , outflow= None)
     
     model.fifo("hermans_verslun_stock", 2 ,inflow = "hermans_verslun_delivery" ,take = "cod_sold_hermans_verslun", expire = "hermans_verslun_throw_away")
     
-    model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire =  )
-        
-    model.fifo("hermans_verslun_stock", 2 ,inflow = "hermans_verslun_delivery" ,take = "cod_sold_hermans_verslun", expire = "hermans_verslun_throw_away")
-    
-    model.fifo("BonusKronan_cod_orders",10000,inflow = "BonusKronan_demand", take = "BonusKronan_delivery" , expire =  )
+    model.fifo("BonusKronan_cod_orders",10000,inflow = "BonusKronan_demand", take = "BonusKronan_delivery" , expire = None )
     
     model.stock("BonusKronan_throw_away_cod_stock",0,inflow="BonusKronan_cod_throw_away" , outflow= None)
     
