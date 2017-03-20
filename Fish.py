@@ -13,42 +13,49 @@ from stockflow2 import Model2
 
 
 
+
 def create_model():
     model = Model2()
+    Cought_Cod = 600
+    
+    model.stock("Fiska-Eyolfs_Cod_stock",0,inflow = "cod_in", outflow = "Process_cod")
+    
+    model.stock("processed_cod_stock",0,inflow = "Process_cod" , outflow = "FreshFreeze")
+    
+    model.fifo("Fresh_cod_2d",2, inflow = "MoveTo_Fresh_fish",take = "delivery",expire = "TWO_days_expired" )
+    
+    model.fifo("Fresh_cod_3d",1, inflow = "TWO_days_expired",take = "delivery",expire = "Freeze") 
+    
+    model.fifo("Frozen_cod",20, inflow = "Freeze",take = "delivery",expire = "Expired_frozen_fish")
+    
+    model.fifo("thrir_laxar_cod_orders",10000,inflow = "thrir_laxar_demand", take = "thrir_laxar_delivery" , expire = None )
+    
+    model.stock("thrir_laxar_throw_away_stock",0,inflow="thrir_laxar_throw_away" , outflow= None)
+    
+    model.fifo("thrir_laxa_stock", 2 ,inflow = "thrirlaxar_delivery" ,take = "fish_sold_thrir_laxar", expire = "thrir_laxar_throw_away")
+    
+    model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire =  )
+    
+    model.stock("hermans_verslun_throw_away_stock",0,inflow="hermans_verslun_throw_away" , outflow= None)
+    
+    model.fifo("hermans_verslun_stock", 2 ,inflow = "hermans_verslun_delivery" ,take = "cod_sold_hermans_verslun", expire = "hermans_verslun_throw_away")
+    
+    model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire =  )
+    
+    model.stock("hermans_verslun_throw_away_stock",0,inflow="hermans_verslun_throw_away" , outflow= None)
+    
+    model.fifo("hermans_verslun_stock", 2 ,inflow = "hermans_verslun_delivery" ,take = "cod_sold_hermans_verslun", expire = "hermans_verslun_throw_away")
+    
+    
+    def inCo
     
     # Define Stocks
-    model.fifo("Order", 7,
-                inflow="Icecream Order",
-                take=None,
-                expire="Deliver")
     
     
-    model.stock("Icecream", 0,
-                inflow="Deliver",
-                outflow="Eat")
-    
-    DesiredAmount = 10
-    
-    def order(time, order, icecream):
-        return np.clip(DesiredAmount - order - icecream, 0, None)
-    
-    model.equation("Icecream Order", order, "Order", "Icecream")
-    
-    def eat_eq(time, icecream):
-        return icecream * 0.5
-    
-    model.equation("Eat", eat_eq, "Icecream")
-
     return model
 
 def run_model(model):
-    END_TIME = 30
-    DT = 1 / 8
-    data = model.run(END_TIME, DT)
     
-    data.plot(y=["Order", "Icecream"])
-    plt.xlabel("Time (s)")
-    plt.ylim(0)
     
     return data
 
