@@ -90,7 +90,7 @@ def create_model():
     
     def Fish_sold_resturants(time, fish_sold_resturants ):
         #print(fish_sold_resturants)
-        Weight_of_fisk_consumed_per_day = random.randint(1500,1700) #kg
+        Weight_of_fisk_consumed_per_day = random.randint(1504,1704) #kg
 
         return Weight_of_fisk_consumed_per_day
     model.equation("Restaurant_Sell",Fish_sold_resturants,"Restaurants_Stock")
@@ -104,7 +104,7 @@ def create_model():
     
     def Fish_sold_supermarkets(time, fish_sold_supermarkets ):
         
-        Weight_of_fisk_sold_per_day = random.randint(5900,6300) #kg
+        Weight_of_fisk_sold_per_day = random.randint(6010,6410) #kg
         return Weight_of_fisk_sold_per_day
     model.equation("Supermarket_Sell",Fish_sold_supermarkets,"Supermarkets_Stock")
 
