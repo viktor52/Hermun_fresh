@@ -37,7 +37,7 @@ def create_model():
                expire = "Expired_Frozen_Fish")
     
     
-    model.fifo("Restaurants_Fifo",2, 
+    model.fifo("Restaurants_Stock",2, 
               inflow = "Deliver_Restaurants", 
               take = "Restaurant_Sell", 
               expire = "Resturant_Trash")
@@ -93,14 +93,14 @@ def create_model():
         Weight_of_fisk_consumed_per_day = random.randint(1500,1700) #kg
 
         return Weight_of_fisk_consumed_per_day
-    model.equation("Restaurant_Sell",Fish_sold_resturants,"Restaurants_Fifo")
+    model.equation("Restaurant_Sell",Fish_sold_resturants,"Restaurants_Stock")
     
     def Restaurant_orders(time, Restaurant_orders, Resturant_fifo):
         demand_for_fish_per_day = 1604 #kg
         demand = demand_for_fish_per_day - Resturant_fifo
         print(Resturant_fifo)
         return demand
-    model.equation("Restaurant_Demand",Restaurant_orders, "Restaurants_Orders","Restaurants_Fifo")
+    model.equation("Restaurant_Demand",Restaurant_orders, "Restaurants_Orders","Restaurants_Stock")
     
     def Fish_sold_supermarkets(time, fish_sold_supermarkets ):
         
@@ -130,7 +130,7 @@ def run_model(model):
     plt.ylabel("Weight (kg)")
     data_plot2.figure.savefig("Fresh_Fish.png")
     
-    data_plot3 = data.plot(y='Restaurants_Fifo')
+    data_plot3 = data.plot(y='Restaurants_Stock')
     plt.xlabel("Time(days)")
     plt.ylabel("Weight(kg)")
     data_plot3.figure.savefig("Resturants_stock.png")
@@ -139,6 +139,10 @@ def run_model(model):
     plt.xlabel("Time (days)")
     plt.ylabel("Weight (kg)")
     data_plot4.figure.savefig("Supermarket_Stock.png")
+    
+    data_plot5 = data.plot(y='Restaurants_Throw_Away')
+    plt.xlabel("Time (days)")
+    plt.ylabel("Weight (kg)")
     
     
     return data
