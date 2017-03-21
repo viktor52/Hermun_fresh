@@ -33,7 +33,7 @@ def create_model():
     
     model.fifo("Frozen_Fish",20,
                inflow = "Frozen",
-               take = "Deliver_Supermarket",
+               take = "Deliver_Supermarkets",
                expire = "Expired_Frozen_Fish")
     
     
@@ -43,27 +43,27 @@ def create_model():
               expire = "Resturant_Trash")
     
    
-    model.fifo("Restaurants_Orders",1000, 
+    model.fifo("Restaurants_Orders",1, 
               inflow = "Restaurant_Demand", 
-              take = "Deliver_Restaurants", 
-              expire = None)
+              take =  None,
+              expire = "Deliver_Restaurants")
  
     model.stock("Restaurants_Throw_Away",0, 
                inflow = "Resturant_Trash")
  
     
-   # model.fifo("Supermarkets_Stock",21,
-   #                inflow = "Deliver_Supermarkets", 
-   #                take = "Supermarket_Sell",
-   #                expire = "Supermarket_Trash")
+    model.fifo("Supermarkets_Stock",21,
+                   inflow = "Deliver_Supermarkets", 
+                   take = "Supermarket_Sell",
+                   expire = "Supermarket_Trash")
    
-   # model.fifo("Supermarkets_Orders",1000, 
-   #            inflow = "Supermarket_Demand",
-   #            take = "",
-   #            expire = None)
+    model.fifo("Supermarkets_Orders",1, 
+               inflow = "Supermarket_Demand",
+               take = None,
+               expire = "Deliver_Supermarkets")
    
-   # model.stock("Supermarkets_Throw_Away",0, 
-   #             inflow = "Supermarket_Trash",)
+    model.stock("Supermarkets_Throw_Away",0, 
+                inflow = "Supermarket_Trash",)
        
    
     def Fish_from_boats(time, Fiska_eyjolfs_fish_stock):
@@ -89,32 +89,33 @@ def create_model():
     def Fresh_Fish_2(time, Fresh_Fish_2d, processed_Fish_stock ):
         freshFish = processed_Fish_stock
         return freshFish
-    model.equation("Move_To_Fresh_Fish",Fresh_Fish_2,"Fresh_Fish_2d", "Processed_Fish_Stock") 
+    model.equation("Move_To_Fresh_Fish",Fresh_Fish_2,"Fresh_Fish_2d", "Processed_Fish_Stock")  
     
-    def Delivery_fresh_Fish_2d(time, Fresh_Fish_2d, Restaurant_fifo):
-        demand_for_fish_per_day = 1604
-        deliver = demand_for_fish_per_day - Restaurant_fifo
-        return deliver
-    model.equation("Deliver_Restaurants",Delivery_fresh_Fish_2d,"Fresh_Fish_2d","Restaurants_Fifo") 
-    
-    
-    def Fish_frozen(time, frozen_fish ):
-        print(frozen_fish)
-        Weight_of_fish_delivered_markets = 6210
-        return Weight_of_fish_delivered_markets
-    model.equation("Deliver_Supermarket",Fish_frozen, "Frozen_Fish")
     
     def Fish_sold_resturants(time, fish_sold_resturants ):
         #print(fish_sold_resturants)
-        Weight_of_fisk_consumed_per_day = 1603.1 #kg
+        Weight_of_fisk_consumed_per_day = random.randint(1500,1700) #kg
+        print(Weight_of_fisk_consumed_per_day)
         return Weight_of_fisk_consumed_per_day
     model.equation("Restaurant_Sell",Fish_sold_resturants,"Restaurants_Fifo")
     
-    def Restaurant_orders(time,Resturant_fifo ):
+    def Restaurant_orders(time, Restaurant_orders, Resturant_fifo):
         demand_for_fish_per_day = 1604 #kg
         demand = demand_for_fish_per_day - Resturant_fifo
         return demand
-    model.equation("Restaurant_Demand",Restaurant_orders, "Restaurants_Fifo")
+    model.equation("Restaurant_Demand",Restaurant_orders, "Restaurants_Orders","Restaurants_Fifo")
+    
+    def Fish_sold_supermarkets(time, fish_sold_supermarkets ):
+        
+        Weight_of_fisk_sold_per_day = random.randint(5900,6400) #kg
+        return Weight_of_fisk_sold_per_day
+    model.equation("Supermarket_Sell",Fish_sold_supermarkets,"Supermarkets_Stock")
+
+    def Supermarket_orders(time, supermarket_order ,Supermarkets_Stock):
+        demand_for_fish_per_day = 6210 #kg
+        demand = demand_for_fish_per_day - Supermarkets_Stock
+        return demand
+    model.equation("Supermarket_Demand",Supermarket_orders, "Supermarkets_Orders", "Supermarkets_Stock")
     return model
 
 def run_model(model):
@@ -122,13 +123,22 @@ def run_model(model):
     DT = 1
     data = model.run(END_TIME, DT)
     
-    data_plot = data.plot(y='Frozen_Fish')
-    plt.xlabel("Time (Weeks)")
-    plt.ylabel("Mercury (ng/l)")
+    data_plot1 = data.plot(y='Frozen_Fish')
+    plt.xlabel("Time (days)")
+    plt.ylabel("Weight (kg)")
     
-    data_plot = data.plot(y='Fresh_Fish_2d')
-    plt.xlabel("Time (Weeks)")
-    plt.ylabel("Mercury (ng/l)")
+    data_plot2 = data.plot(y='Fresh_Fish_2d')
+    plt.xlabel("Time (days)")
+    plt.ylabel("Weight (kg)")
+    
+    data_plot3 = data.plot(y='Restaurants_Fifo')
+    plt.xlabel("Time(days)")
+    plt.ylabel("Weight(kg)")
+    
+    data_plot4 = data.plot(y='Supermarkets_Stock')
+    plt.xlabel("Time (days)")
+    plt.ylabel("Weight (kg)")  
+    
     
     return data
 
