@@ -18,13 +18,13 @@ def create_model():
     model = Model2()
     
     
-    model.stock("Fiska-Eyjolfs_Fish_Stock",2400,
+    model.stock("Fiska-Eyjolfs_Fish_Stock",1800,
                 inflow = "Fish_In",
                 outflow = "Process_Fish")
    
     model.stock("Processed_Fish_Stock",900,
                 inflow = "Process_Fish",
-                outflow = "Fresh_Freeze")
+                outflow = "Move_To_Fresh_Fish")
     
     model.fifo("Fresh_Fish_2d",2,
                inflow = "Move_To_Fresh_Fish",
@@ -81,33 +81,30 @@ def create_model():
         return Processed_Fish
     model.equation("Process_Fish",process_Fish,"Fiska-Eyjolfs_Fish_Stock")
     
-    def fresh_freeze(time, processed_Fish_stock): 
+    def Move_To_fresh(time, processed_Fish_stock): 
         return processed_Fish_stock
-    model.equation("Fresh_Freeze", fresh_freeze, "Processed_Fish_Stock")
+    model.equation("Move_To_Fresh_Fish", Move_To_fresh, "Processed_Fish_Stock")
     
-   
-    def Fresh_Fish_2(time, Fresh_Fish_2d, processed_Fish_stock ):
-        freshFish = processed_Fish_stock
-        return freshFish
-    model.equation("Move_To_Fresh_Fish",Fresh_Fish_2,"Fresh_Fish_2d", "Processed_Fish_Stock")  
+    
     
     
     def Fish_sold_resturants(time, fish_sold_resturants ):
         #print(fish_sold_resturants)
         Weight_of_fisk_consumed_per_day = random.randint(1500,1700) #kg
-        print(Weight_of_fisk_consumed_per_day)
+
         return Weight_of_fisk_consumed_per_day
     model.equation("Restaurant_Sell",Fish_sold_resturants,"Restaurants_Fifo")
     
     def Restaurant_orders(time, Restaurant_orders, Resturant_fifo):
         demand_for_fish_per_day = 1604 #kg
         demand = demand_for_fish_per_day - Resturant_fifo
+        print(Resturant_fifo)
         return demand
     model.equation("Restaurant_Demand",Restaurant_orders, "Restaurants_Orders","Restaurants_Fifo")
     
     def Fish_sold_supermarkets(time, fish_sold_supermarkets ):
         
-        Weight_of_fisk_sold_per_day = random.randint(5900,6400) #kg
+        Weight_of_fisk_sold_per_day = random.randint(5900,6300) #kg
         return Weight_of_fisk_sold_per_day
     model.equation("Supermarket_Sell",Fish_sold_supermarkets,"Supermarkets_Stock")
 
