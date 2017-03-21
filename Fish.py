@@ -18,9 +18,9 @@ def create_model():
     model.stock("Fiska-Eyjolfs_Cod_stock",0,inflow = "cod_in", outflow = "Process_cod")
     model.stock("processed_cod_stock",900,inflow = "Process_cod" , outflow = "FreshFreeze")
     model.fifo("Fresh_cod_2d",2, inflow = "MoveTo_Fresh_cod",take = None ,expire = "TWO_days_expired" )
-    model.fifo("Fresh_cod_3d",1, inflow = "TWO_days_expired",take = None ,expire = "Freeze") 
-    model.fifo("Frozen_cod",20, inflow = "Freeze",take = None ,expire = "Expired_frozen_fish")
-   #model.fifo("thrir_laxar_cod_orders",10000,inflow = "thrir_laxar_demand", take = "thrir_laxar_delivery" , expire = None )
+    model.fifo("Fresh_cod_3d",1, inflow = "TWO_days_expired",take = None ,expire = "Frozen") 
+    model.fifo("Frozen_cod",20, inflow = "Frozen",take = "deliver" ,expire = "Expired_frozen_fish")
+   # model.fifo("thrir_laxar_cod_orders",10000,inflow = "thrir_laxar_demand", take = "thrir_laxar_delivery" , expire = None )
    # model.stock("thrir_laxar_throw_away_stock",0,inflow="thrir_laxar_throw_away" , outflow= None)
    # model.fifo("thrir_laxa_stock", 2 ,inflow = "thrirlaxar_delivery" ,take = "fish_sold_thrir_laxar", expire = "thrir_laxar_throw_away")
    # model.fifo("Hermans_verslun_cod_orders",10000,inflow = "hermans_verslun_demand", take = "hermans_verslun_delivery" , expire = None )
@@ -51,13 +51,14 @@ def create_model():
     model.equation("MoveTo_Fresh_cod",Fresh_cod_2,"Fresh_cod_2d", "processed_cod_stock") 
     
     def Fresh_cod_3(time, Fresh_cod_3d ):
-        print(Fresh_cod_3d)
+        #print(Fresh_cod_3d)
         return None
     model.equation("TWO_days_Expired",Fresh_cod_3,"Fresh_cod_3d",)
     
-    def Frozen_cod():
-        
-    model.equation()
+    def cod_frozen(time, Fresh_cod_3d ):
+        print(Fresh_cod_3d)
+        return None
+    model.equation("deliver",cod_frozen,"Frozen_cod",)
     
     return model
 
