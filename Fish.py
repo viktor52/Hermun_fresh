@@ -143,7 +143,12 @@ def run_model(model):
     data_plot5 = data.plot(y='Restaurants_Throw_Away')
     plt.xlabel("Time (days)")
     plt.ylabel("Weight (kg)")
+    data_plot5.figure.savefig("Resturant_Throw_Away.png")
     
+    data_plot6 = data.plot(y='Supermarkets_Throw_Away')
+    plt.xlabel("Time (days)")
+    plt.ylabel("Weight (kg)")
+    data_plot6.figure.savefig("Supermarket_Throw_Away.png")
     
     return data
 
