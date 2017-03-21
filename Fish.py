@@ -126,18 +126,22 @@ def run_model(model):
     data_plot1 = data.plot(y='Frozen_Fish')
     plt.xlabel("Time (days)")
     plt.ylabel("Weight (kg)")
+    data_plot1.figure.savefig("Frozen_Fish.png")
     
     data_plot2 = data.plot(y='Fresh_Fish_2d')
     plt.xlabel("Time (days)")
     plt.ylabel("Weight (kg)")
+    data_plot2.figure.savefig("Fresh_Fish.png")
     
     data_plot3 = data.plot(y='Restaurants_Fifo')
     plt.xlabel("Time(days)")
     plt.ylabel("Weight(kg)")
+    data_plot3.figure.savefig("Resturants_stock.png")
     
     data_plot4 = data.plot(y='Supermarkets_Stock')
     plt.xlabel("Time (days)")
-    plt.ylabel("Weight (kg)")  
+    plt.ylabel("Weight (kg)")
+    data_plot4.figure.savefig("Supermarket_Stock.png")
     
     
     return data
